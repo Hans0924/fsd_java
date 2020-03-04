@@ -3,19 +3,23 @@ package com.hans0924.fsd.process.config;
 import com.hans0924.fsd.constants.ManageVarType;
 import com.hans0924.fsd.manager.Manage;
 import com.hans0924.fsd.process.Process;
+import com.hans0924.fsd.support.Support;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.channels.Selector;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * @author 曾韩铄
+ * @author Hanshuo Zeng
  * @since 2020-03-03
  */
 public class ConfigManager extends Process {
@@ -66,12 +70,12 @@ public class ConfigManager extends Process {
 
     @Override
     public boolean run() {
-        long now = System.currentTimeMillis();
+        long now = Support.mtime();
         if (now - prevCheck < CONFIG_INTERVAL) {
             return false;
         }
         prevCheck = now;
-        Path file = Path.of(fileName);
+        Path file = Paths.get(fileName);
         if (Files.notExists(file)) {
             return false;
         }
@@ -95,14 +99,16 @@ public class ConfigManager extends Process {
         if (!file.isFile() || !file.exists()) {
             return;
         }
-        Manage.manager.setVar(varAccess, System.currentTimeMillis());
+        Manage.manager.setVar(varAccess, Support.mtime());
         ConfigGroup current = null;
         try (InputStreamReader read = new InputStreamReader(new FileInputStream(file));
              BufferedReader bufferedReader = new BufferedReader(read)) {
         String line;
 
-        while ((line = bufferedReader.readLine()) != null)
-        {
+        while ((line = bufferedReader.readLine()) != null) {
+            if (StringUtils.isEmpty(line)) {
+                continue;
+            }
             if (line.charAt(0) == '#' || line.charAt(0) == '\r' || line.charAt(0) == '\n') {
                 continue;
             }
@@ -133,6 +139,6 @@ public class ConfigManager extends Process {
         } catch (IOException e) {
             LOGGER.error("Something went wrong when parse config file: ", e);
         }
-        prevCheck = System.currentTimeMillis();
+        prevCheck = Support.mtime();
     }
 }

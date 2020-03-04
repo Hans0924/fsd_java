@@ -1,41 +1,39 @@
 package com.hans0924.fsd.process;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.nio.channels.SelectableChannel;
-import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
- * @author 曾韩铄
+ * @author Hanshuo Zeng
  * @since 2020-03-03
  */
 public class PMan {
+    private final static Logger LOGGER = LoggerFactory.getLogger(PMan.class);
+
+    public static List<Process> processes = new ArrayList<>();
+
     private boolean busy;
 
-    private Selector selector;
-
-    public PMan() throws IOException {
-        selector = Selector.open();
+    public PMan() {
         busy = false;
     }
 
-    public void registerProcess(Process process) throws IOException {
-        process.getChannel().configureBlocking(false);
-        SelectionKey selectionKey = process.getChannel().register(selector, SelectionKey.OP_READ | SelectionKey.OP_WRITE, process);
-        process.setSelectionKey(selectionKey);
+    public void registerProcess(Process process) {
+        processes.add(process);
     }
 
-    public void run() throws IOException {
-        long timeOut = busy ? 0 : 1000L;
-        busy = false;
-        if (selector.select(timeOut) > 0) {
-            Set<SelectionKey> selectionKeys = selector.selectedKeys();
-            for (SelectionKey selectionKey : selectionKeys) {
-                Process attachment = (Process) selectionKey.attachment();
-                if (attachment.run()) {
-                    busy = true;
-                }
+    public void run() {
+        for (Process process : processes) {
+            if (process.run()) {
+                busy = true;
             }
         }
     }

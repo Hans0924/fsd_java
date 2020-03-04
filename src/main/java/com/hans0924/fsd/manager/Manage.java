@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author 曾韩铄
+ * @author Hanshuo Zeng
  * @since 2020-03-03
  */
 public class Manage {
@@ -21,15 +21,17 @@ public class Manage {
 
     public Manage() {
         nVars = 0;
-        variables = new ArrayList<ManageVar>();
+        variables = new ArrayList<>();
     }
 
     public int addVar(String name, int type) {
         ManageVar var = new ManageVar();
         var.setType(type);
         var.setName(name);
+        var.setValue(new ManageVarValue());
+        ++nVars;
         variables.add(var);
-        return variables.size();
+        return variables.size() - 1;
     }
 
     public void delVar(int num) {
@@ -68,12 +70,11 @@ public class Manage {
         value.setTimeVal(timeVal);
     }
 
-    public ManageVarValue getVar(int num) {
+    public ManageVar getVar(int num) {
         if (num >= nVars) {
             return null;
         }
-        ManageVar var = variables.get(num);
-        return var.getValue();
+        return variables.get(num);
     }
 
     public int getNVars() {

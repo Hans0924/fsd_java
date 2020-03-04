@@ -1,10 +1,7 @@
 package com.hans0924.fsd.manager;
 
-import javolution.io.Struct;
-import javolution.io.Union;
-
 /**
- * @author 曾韩铄
+ * @author Hanshuo Zeng
  * @since 2020-03-03
  */
 public class ManageVar {

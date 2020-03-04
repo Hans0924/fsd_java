@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @author 曾韩铄
+ * @author Hanshuo Zeng
  * @since 2020-03-04
  */
 public class ConfigGroup {
@@ -67,5 +67,9 @@ public class ConfigGroup {
 
     public boolean isChanged() {
         return changed;
+    }
+
+    public void setChanged(boolean changed) {
+        this.changed = changed;
     }
 }

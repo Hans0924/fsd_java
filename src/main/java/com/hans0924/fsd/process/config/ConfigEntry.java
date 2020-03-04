@@ -1,11 +1,13 @@
 package com.hans0924.fsd.process.config;
 
+import org.apache.commons.lang3.math.NumberUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 /**
- * @author 曾韩铄
+ * @author Hanshuo Zeng
  * @since 2020-03-03
  */
 public class ConfigEntry {
@@ -36,7 +38,7 @@ public class ConfigEntry {
     }
 
     public int getInt() {
-        return Integer.parseInt(data);
+        return NumberUtils.toInt(data);
     }
 
     public void fillParts() {
@@ -47,16 +49,16 @@ public class ConfigEntry {
         nParts = split.length;
     }
 
-    public boolean inList(String entry) {
+    public int inList(String entry) {
         if (parts.isEmpty()) {
             fillParts();
         }
         for (String part : parts) {
             if (Objects.equals(part, entry)) {
-                return true;
+                return 1;
             }
         }
-        return false;
+        return 0;
     }
 
     public int getNParts() {

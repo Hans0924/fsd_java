@@ -1,7 +1,7 @@
 package com.hans0924.fsd.manager;
 
 /**
- * @author 曾韩铄
+ * @author Hanshuo Zeng
  * @since 2020-03-03
  */
 public class ManageVarValue {
